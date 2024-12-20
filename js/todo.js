@@ -1,5 +1,11 @@
 const todo = {
+  tpl: null,
   items: [], // 작업 목록
+  // 초기에 실행할 영역
+  init() {
+    // 템플릿 HTML 추출
+    this.tpl = document.getElementById("tpl").innerHTML;
+  },
   // 작업 등록
   add(title, description, deadline) {
     const seq = Date.now();
@@ -21,15 +27,28 @@ const todo = {
   render() {
     const itemsEl = document.querySelector(".items");
     itemsEl.innerText="";
+
+    const domParser = new DOMParser();
+
     for (const {seq, title, description, deadline} of this.items){
-      const li = document.createElement("li");
-      li.append(title);
-      itemsEl.append(li);
+      let html = this.tpl;
+      html = html
+        .replace(/#{seq}/g, seq)
+        .replace(/#{title}/g, title)
+        .replace(/#{description}/g, description.replace(/\n/g, "<br>"))
+        .replace(/#{deadline}/g, deadline);
+      
+      const dom = domParser.parseFromString(html, "text/html");
+      const itemEl = dom.querySelector("li");
+      itemsEl.append(itemEl);
     }
   }
 }
 
 window.addEventListener("DOMContentLoaded", function() {
+  //초기화
+  todo.init();
+
   // 양식 태그의 기본 동작 차단
   frmTodo.addEventListener("submit", function(e) {
     e.preventDefault();
