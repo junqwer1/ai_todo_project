@@ -49,8 +49,8 @@ const todo = {
 
     for (const {seq, title, description, deadline, done} of items){
       let html = this.tpl;
-      const checkedTrue = done ? " chekced":"";
-      const checkedFalse = done ? "": " chekced";
+      const checkedTrue = done ? " checked":"";
+      const checkedFalse = done ? "": " checked";
       html = html
         .replace(/#{seq}/g, seq)
         .replace(/#{title}/g, title)
